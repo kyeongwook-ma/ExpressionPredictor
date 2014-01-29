@@ -7,17 +7,9 @@ import java.io.InputStream;
 
 
 public class ImageUtil {
-	
-	/**
-	 * @author se
-	 * @version 2014. 1. 17.   
-	 * @param fileName
-	 * @param bytes 
-	 * byte to jpg file
-	 */
 	public static void saveByteToFile(String fileName, byte[] bytes) {
 
-		String path = "Image\\" + fileName +".jpg";
+		String path = "./Image" + fileName +".jpg";
 		
 		try {
 			FileOutputStream fos = new FileOutputStream(path);
@@ -28,19 +20,12 @@ public class ImageUtil {
 		}
 	}
 	
-	/**
-	 * @author se
-	 * @version 2014. 1. 17.   
-	 * @param fileName
-	 * @param path
-	 * @return 
-	 * jpg to byte array
-	 */
 	public static byte[] convertFiletoByte(String fileName, String path) {
 		ByteArrayOutputStream bos = null;
-				
+	
+			
 		try {
-			InputStream is = new BufferedInputStream(new FileInputStream(path + fileName));
+			InputStream is = new BufferedInputStream(new FileInputStream(path + fileName+ "-Label.jpg" ));
 
 			bos = new ByteArrayOutputStream();
 

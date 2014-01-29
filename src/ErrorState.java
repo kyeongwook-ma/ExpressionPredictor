@@ -1,10 +1,6 @@
 import com.afk.calmera.network.Message;
 
 
-/**
- * @author se
- * define error state
- */
 public class ErrorState implements ProcessType {
 
 	@Override

@@ -16,35 +16,28 @@ public class SockServerController {
 
 	public void runServer() {
 		isRunning = true;
+		
+		while(isRunning) {
 
-		try {
-			
-			/* create a server socket */
-			serverSocket = new ServerSocket(this.port);
-			System.out.println("Server is started...");
+			try {
+				serverSocket = new ServerSocket(this.port);
+				System.out.println("Server is started...");
 
-			/* 
-			 * run until admin stop it 
-			 * later implement a stop request 
-			 */
-			while(isRunning) {
+				while(isRunning) {
 
-				/* accept a client socket */
-				Socket clientSocket = serverSocket.accept();
+					Socket clientSocket = serverSocket.accept();
 
-				System.out.println(clientSocket.getInetAddress() + " is connected");
+					System.out.println(clientSocket.getInetAddress() + " is connected");
 
-				/* process a request concurrently */
-				ProcessThread processThread = new ProcessThread(clientSocket);
-				processThread.start();
+					ProcessThread processThread = new ProcessThread(clientSocket);
+					processThread.start();
 
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-
 	}
-
 
 	public void stopServer() {
 		isRunning = false;

@@ -5,10 +5,6 @@ import com.afk.calmera.network.MessageBody;
 import com.afk.calmera.network.MessageHeader;
 
 
-/**
- * @author se
- * img file upload request, send a predict string
- */
 public class FileUploadReq implements ProcessType {
 
 	@Override

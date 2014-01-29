@@ -13,8 +13,7 @@ public class LabelUploadReq implements ProcessType {
 		
 		respHeader.setMsgType(MessageHeader.LABEL_DOWNLOAD_RESP);
 		
-		byte[] labelImg = ImageUtil.convertFiletoByte(msg.getHeader().getFileName()+"-Label.jpg", "Image\\Label\\").clone();
-		labelBody.setData(labelImg);
+		
 
 		return new Message(respHeader, labelBody);
 	}

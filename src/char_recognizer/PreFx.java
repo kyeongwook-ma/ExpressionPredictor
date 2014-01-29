@@ -59,15 +59,16 @@ public class PreFx {
 	public void eliminateNoise() {
 		Mat hiMat = new Mat();
 		
-		/* Image Sharpening. */
+		//Image Sharpening.
 		Mat tmp = new Mat();
 		Imgproc.GaussianBlur(img, tmp, new Size(5, 5), 5);
 		Core.addWeighted(img, 2.1, tmp, -1.0, 0, img);
 		
-		/* Eliminate noise. */
+		//Eliminate noise.
 		Imgproc.dilate(img, img, hiMat);
 		Imgproc.erode(img, img, hiMat);
 		
+		//Highgui.imwrite("C:\\Users\\Zotdaedda\\Desktop\\Sample\\camera\\test\\out"+srcfilename+"-eliminNoise.jpg", img);
 	}
 	
 	public void binaryImg() {
@@ -88,24 +89,28 @@ public class PreFx {
 		Imgproc.erode(binaryimg, binaryimg, hiMat);
 		Imgproc.dilate(binaryimg, binaryimg, hiMat);
 		Imgproc.dilate(binaryimg, binaryimg, hiMat);
-
+		
+		//Highgui.imwrite("C:\\Users\\Zotdaedda\\Desktop\\Sample\\camera\\test\\out"+srcfilename+"-gray.jpg", gray);
+		//Highgui.imwrite("C:\\Users\\Zotdaedda\\Desktop\\Sample\\camera\\test\\out"+srcfilename+"-binary.jpg", binaryimg);
 	}
 	
 	public void findContours() {
-		
-		/* Find contours from binary image. */
+		//Find contours from binary image.
 		Mat hiMat = new Mat();
 		ArrayList<MatOfPoint> tempcontours = new ArrayList<MatOfPoint>();
 		
-		/*Find most outer contours.*/
+		//Find most outer contours.
 		Imgproc.findContours(binaryimg, contours, hiMat, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 		
-		/*Find most outer and inner hole contours.*/
+		//Find most outer and inner hole contours.
 		Imgproc.findContours(binaryimg, tempcontours, hiMat, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
 		
-		/*Draw contours on labeling image.*/
+		//Draw contours on labeling image.
+		//Imgproc.drawContours(img, contours, -1, new Scalar(255, 0, 0));
 		Imgproc.drawContours(labelimg, tempcontours, -1, new Scalar(0), 2);
 		
+		//Highgui.imwrite("C:\\Users\\Zotdaedda\\Desktop\\Sample\\camera\\test\\out"+srcfilename+"-findcontours1.jpg", img);
+		//Highgui.imwrite("C:\\Users\\Zotdaedda\\Desktop\\Sample\\camera\\test\\out"+srcfilename+"-findcontours2.jpg", labelimg);
 	}
 	
 	public void labeling(int height, int width) {
@@ -116,17 +121,21 @@ public class PreFx {
 			if(rect.height >= height || rect.width >= width)
 				label.add(rect);
 		}
-	
+		/*Mat temp = labelimg.clone();
+		for(int i = 0; i < label.size(); i++)
+			Core.rectangle(temp, new Point(label.get(i).x, label.get(i).y), 
+					new Point(label.get(i).x + label.get(i).width, 
+							label.get(i).y + label.get(i).height), new Scalar(0, 0, 255));
+		Highgui.imwrite("C:\\Users\\Zotdaedda\\Desktop\\Sample\\camera\\test\\out"+srcfilename+"-rect.jpg", temp);*/
 	}
 	
 	public void fixLabeling() {
-		
-		/* Merge Rect to One Character. */
+		//Merge Rect to One Character.
 		int numRect = label.size();
 		int[] ok = new int[label.size()];
 		ArrayList<Rect> fixList = new ArrayList<Rect>();	
 		
-		/* First, Merge Width-Crossed and inner Rectangles. */ 
+		//First, Merge Width-Crossed and inner Rectangles. 
 		for(int h = 0; h < 3; h++) {
 			for(int i = 0; i < numRect; i++) {
 				Rect rect = new Rect(label.get(i).x, label.get(i).y, label.get(i).width, label.get(i).height);
@@ -159,13 +168,20 @@ public class PreFx {
 			}
 			label = fixList;
 			
-			/* Ready for repeat-First Step(Initialize). */
+			//Ready for repeat-First Step(Initialize).
 			numRect = label.size();
 			ok = new int[label.size()];
 			fixList = new ArrayList<Rect>();
 		}
+
+		/*Mat temp = labelimg.clone();
+		for(int i = 0; i < label.size(); i++)
+			Core.rectangle(temp, new Point(label.get(i).x, label.get(i).y), 
+					new Point(label.get(i).x + label.get(i).width, 
+							label.get(i).y + label.get(i).height), new Scalar(0, 0, 255));
+		Highgui.imwrite("C:\\Users\\Zotdaedda\\Desktop\\Sample\\camera\\test\\out"+srcfilename+"-rect1.jpg", temp);*/
 		
-		/* Second, Merge Cross Rectangles. */ 
+		//Second, Merge Cross Rectangles. 
 		for(int h = 0; h < 3; h++) {
 			for(int i = 0; i < numRect; i++) {
 				Rect rect = new Rect(label.get(i).x, label.get(i).y, label.get(i).width, label.get(i).height);
@@ -206,7 +222,12 @@ public class PreFx {
 			fixList = new ArrayList<Rect>();
 		}
 		
-		
+		/*temp = labelimg.clone();
+		for(int i = 0; i < label.size(); i++)
+			Core.rectangle(temp, new Point(label.get(i).x, label.get(i).y), 
+					new Point(label.get(i).x + label.get(i).width, 
+							label.get(i).y + label.get(i).height), new Scalar(0, 0, 255));
+		Highgui.imwrite("C:\\Users\\Zotdaedda\\Desktop\\Sample\\camera\\test\\out"+srcfilename+"-rect2.jpg", temp);*/
 	}
 	
 	public void sortLabeling() {
@@ -241,6 +262,7 @@ public class PreFx {
 					new Point(label.get(i).x + label.get(i).width, 
 							label.get(i).y + label.get(i).height), new Scalar(0, 0, 255));
 		
+		//Highgui.imwrite("C:\\Users\\Zotdaedda\\Desktop\\Sample\\camera\\test\\out"+srcfilename+"-label.jpg", temp);
 		return temp;
 	}
 	

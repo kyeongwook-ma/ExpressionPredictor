@@ -12,6 +12,7 @@ import com.afk.calmera.network.Message;
 public class ProcessThread extends Thread {
 
 	private Socket socket;
+
 	private Message respMsg ;
 
 	public ProcessThread(Socket socket) {
@@ -23,14 +24,13 @@ public class ProcessThread extends Thread {
 
 		try {
 
-			/* get I/O from client socket */
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-			/* read message from socket */
+			// 소켓으로부터 메세지를 읽어들임
 			Message reqMsg = (Message)ois.readObject();
 
-			/* create a response message corresponding to request type */
+			// 각 타입에 맞는 처리를 받아 response 메세지를 만든다.
 			respMsg = procesReqMsg(reqMsg);
 			oos.writeObject(respMsg);
 
@@ -46,15 +46,15 @@ public class ProcessThread extends Thread {
 	}
 
 
-
+	/*
+	 * Type에 맞는 메세지 처리를 한다
+	 */
 	/**
-	 * @author se
-	 * @version 2014. 1. 17.   
 	 * @param message
-	 * @return 
-	 * create a response message with a request type
+	 * @return
 	 */
 	private Message procesReqMsg(Message message) {
+
 
 		int msgType = message.getMsgType();
 		ProcessType process = null;
@@ -63,20 +63,20 @@ public class ProcessThread extends Thread {
 		switch(msgType) 
 		{
 		case FILE_UPLOAD_REQ :
-
 			process = new FileUploadReq();
 			break;
 
 		case LABEL_DOWNLOAD_REQ : 
-
 			process = new LabelUploadReq();
 			break;
 
 		default :
 			process = new ErrorState();
 			break;
+
+
 		}
-		
+
 		return process.process(message);
 	}
 
